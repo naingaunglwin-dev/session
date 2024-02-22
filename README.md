@@ -12,7 +12,6 @@
 
 ## Requirement
 - **PHP** version 8.0 or newer is required
-- Composer
 
 ## Installation & Setup
 - You can just download the code from repo and use or download using composer.

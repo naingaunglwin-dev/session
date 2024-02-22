@@ -35,6 +35,27 @@ interface SessionInterface
     public function all(): array;
 
     /**
+     * Set a flash message with the given key and value.
+     *
+     * @param string $key The key of the flash message.
+     * @param mixed $value The value of the flash message.
+     * @return void
+     */
+    public function setFlashMessage(string $key, mixed $value): void;
+
+    /**
+     * Retrieve and remove a flash message with the given key.
+     *
+     * This method retrieves the flash message corresponding to the provided key
+     * from the internal storage and removes it. Subsequent calls to getFlash with
+     * the same key will return null.
+     *
+     * @param string $key The key of the flash message to retrieve.
+     * @return string|array|object|null The value of the flash message if found, or null if not found.
+     */
+    public function getFlashMessage(string $key): string|array|object|null;
+
+    /**
      * Destroy a specific session variable.
      *
      * @param mixed $key The key of the session variable to destroy.

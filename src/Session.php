@@ -57,6 +57,8 @@ class Session implements SessionInterface
      */
     private $encryptKey;
 
+    private array $flashes;
+
     /**
      * Session constructor.
      *
@@ -99,6 +101,8 @@ class Session implements SessionInterface
         $this->setSession();
 
         $this->encryptKey = $this->generate();
+
+        $this->flashes = [];
     }
 
     /**
@@ -106,7 +110,7 @@ class Session implements SessionInterface
      *
      * @param string $name The name of the session
      */
-    private function store(string $name, bool $first = null)
+    private function store(string $name, bool $first = null): void
     {
         $first = $first ?? false;
 
@@ -165,9 +169,33 @@ class Session implements SessionInterface
     /**
      * @inheritDoc
      */
+    public function setFlashMessage(string $key, mixed $value): void
+    {
+        $session = new self('session_flash_data');
+        $session->set($key, $value);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFlashMessage(string $key): string|array|null|object
+    {
+        $session = new self('session_flash_data');
+        $data    = $session->get($key);
+
+        $session->destroy($key);
+
+        return $data;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function destroy(mixed $key): void
     {
-        unset($this->global[$key]);
+        if (isset($this->global[$key])) {
+            unset($this->global[$key]);
+        }
 
         $this->updateGlobalSession();
     }
@@ -203,7 +231,7 @@ class Session implements SessionInterface
     /**
      * Configure session parameters like cookie settings and name.
      */
-    private function config()
+    private function config(): void
     {
         session_set_cookie_params([
             'secure'   => $this->secure,
@@ -217,23 +245,23 @@ class Session implements SessionInterface
     /**
      * Regenerate the session ID and update session token if timeout is reached.
      */
-    private function regenerate()
+    private function regenerate(): void
     {
-        $token = $_SESSION['session_created_token'] ?? '';
-        if (!isset($token)) {
-            $_SESSION['session_created_token'] = time();
-        }
+        $lastAccessTime = $_SESSION['last_access_time'] ?? 0;
 
-        if ($token < (time() - $this->timeOut)) {
+        $elapsedTime = time() - $lastAccessTime;
+
+        if ($elapsedTime > $this->timeOut) {
             session_regenerate_id(true);
-            $_SESSION['session_created_token'] = time();
+
+            $_SESSION['last_access_time'] = time();
         }
     }
 
     /**
      * Retrieve session data and initialize global session array.
      */
-    private function setSession()
+    private function setSession(): void
     {
         $this->global = $_SESSION ?? [];
     }
@@ -251,7 +279,7 @@ class Session implements SessionInterface
     /**
      * Update the global session data with the current state of the class's session data.
      */
-    private function updateGlobalSession()
+    private function updateGlobalSession(): void
     {
         $_SESSION = $this->global;
     }
@@ -275,7 +303,7 @@ class Session implements SessionInterface
      * @param $data
      * @return mixed
      */
-    private function decrypt($data)
+    private function decrypt($data): mixed
     {
         $cipher = 'aes-256-cbc';
         $iv_length = openssl_cipher_iv_length($cipher);
@@ -292,7 +320,7 @@ class Session implements SessionInterface
      *
      * @throws InvalidArgumentException If any validation fails.
      */
-    private function checkConfig(object $config)
+    private function checkConfig(object $config): void
     {
         if (isset($config->name) && gettype($config->name) !== 'string') {
             throw new InvalidArgumentException("Session name must be string type");

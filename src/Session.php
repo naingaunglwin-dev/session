@@ -57,8 +57,6 @@ class Session implements SessionInterface
      */
     private $encryptKey;
 
-    private array $flashes;
-
     /**
      * Session constructor.
      *
@@ -101,8 +99,6 @@ class Session implements SessionInterface
         $this->setSession();
 
         $this->encryptKey = $this->generate();
-
-        $this->flashes = [];
     }
 
     /**

@@ -1,8 +1,9 @@
 <div align="center">
 
 # Simple PHP Session Library
-![Status](https://img.shields.io/badge/status-development-blue)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Status](https://img.shields.io/badge/test-pass-green)
+![Status](https://img.shields.io/badge/coverage-96.80%25-green)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 </div>
 

@@ -73,7 +73,7 @@ class Session implements SessionInterface
     {
         if (empty($config)) {
             $config = (object) [
-                'name'     => 'simple_php_session_lib',
+                'name'     => $name,
                 'secure'   => true,
                 'httpOnly' => true,
                 'sameSite' => 'Strict',
@@ -125,6 +125,30 @@ class Session implements SessionInterface
     /**
      * @inheritDoc
      */
+    public function getSessionName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSameSite(): string
+    {
+        return $this->sameSite;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSessionTimeout(): int
+    {
+        return $this->timeOut;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function set(mixed $key, mixed $value): void
     {
         $this->global[$key] = $this->encrypt($value);
@@ -135,31 +159,51 @@ class Session implements SessionInterface
     /**
      * @inheritDoc
      */
-    public function get(mixed $key = null): string|array|object|null
+    public function get(mixed $key = null): mixed
     {
         if (!$key) {
             $values = [];
             if (!empty($this->global)) {
                 foreach ($this->global as $key => $value) {
-                    $values[$key] = $this->decrypt($value);
+                    if ($key === 'last_access_time') {
+                        $values[$key] = $value;
+                    } else {
+                        $values[$key] = $this->decrypt($value);
+                    }
                 }
+
                 return $values;
             }
-
-            return null;
         }
         if (isset($this->global[$key])) {
+            if ($key === 'last_access_time') {
+                return $this->global[$key];
+            }
+
             return $this->decrypt($this->global[$key]);
         }
+
         return null;
     }
 
     /**
      * @inheritDoc
      */
-    public function all(): array
+    public function getAll(): array
     {
-        return $this->global;
+        $data = [];
+        if (!empty($this->global)) {
+            foreach ($this->global as $key => $value) {
+                if ($key === 'last_access_time') {
+                    $data[$key] = $value;
+                } else {
+                    $data[$key] = $this->decrypt($value);
+                }
+            }
+            return $data;
+        }
+
+        return $data;
     }
 
     /**
@@ -203,6 +247,8 @@ class Session implements SessionInterface
     {
         session_destroy();
 
+        $this->global = [];
+
         $this->updateGlobalSession();
     }
 
@@ -212,8 +258,6 @@ class Session implements SessionInterface
     public function restart(): void
     {
         $this->destroy_all();
-
-        $this->updateGlobalSession();
     }
 
     /**
@@ -222,6 +266,14 @@ class Session implements SessionInterface
     public function isSecure(): bool
     {
         return $this->secure === true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isHttpOnly(): bool
+    {
+        return $this->httpOnly === true;
     }
 
     /**

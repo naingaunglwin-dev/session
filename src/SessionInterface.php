@@ -12,6 +12,26 @@ namespace NAL\Session;
 interface SessionInterface
 {
     /**
+     * Get Session Name
+     *
+     * @return string
+     */
+    public function getSessionName(): string;
+
+    /**
+     * Get Session sameSite
+     *
+     * @return string
+     */
+    public function getSameSite(): string;
+
+    /**
+     * Get Session timeOut
+     *
+     * @return int
+     */
+    public function getSessionTimeout(): int;
+    /**
      * Set a session variable.
      *
      * @param mixed $key The key for the session variable.
@@ -23,16 +43,16 @@ interface SessionInterface
      * Get a session variable.
      *
      * @param mixed $key The key of the session variable (optional).
-     * @return string|array|object|null The value of the session variable, or null if not found.
+     * @return mixed The value of the session variable, or null if not found.
      */
-    public function get(mixed $key = null): string|array|object|null;
+    public function get(mixed $key = null): mixed;
 
     /**
      * Get all session variables.
      *
      * @return array An array containing all session variables.
      */
-    public function all(): array;
+    public function getAll(): array;
 
     /**
      * Set a flash message with the given key and value.
@@ -78,4 +98,11 @@ interface SessionInterface
      * @return bool
      */
     public function isSecure(): bool;
+
+    /**
+     * Check Session set with httpOnly or not
+     *
+     * @return bool
+     */
+    public function isHttpOnly(): bool;
 }

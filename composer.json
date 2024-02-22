@@ -3,6 +3,7 @@
   "description": "Simple PHP Session Library",
   "minimum-stability": "dev",
   "version": "1.0.0",
+  "prefer-stable": true,
   "license": "MIT",
   "authors": [
     {

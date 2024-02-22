@@ -2,6 +2,7 @@
   "name": "naingaunglwin-dev/session",
   "description": "Simple PHP Session Library",
   "minimum-stability": "dev",
+  "version": "1.0.0",
   "license": "MIT",
   "authors": [
     {

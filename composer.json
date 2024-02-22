@@ -1,7 +1,7 @@
 {
   "name": "naingaunglwin-dev/session",
   "description": "Simple PHP Session Library",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
     {

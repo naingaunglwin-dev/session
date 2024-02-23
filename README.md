@@ -23,20 +23,19 @@
 - Add this to `composer.json`
 ```php
 {
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/naingaunglwin-dev/session"
-    }
-  ],
   "require": {
-    "naingaunglwin-dev/session": "dev-master"
+    "naingaunglwin-dev/session": "^1.0"
   }
 }
 ```
 - Run the following command in your terminal from the project's root directory:
 ```bash
 composer install
+```
+
+If you already have `composer.json` file in your project, just run this command in your terminal,
+```bash
+composer require naingaunglwin-dev/session
 ```
 
 ## Usage
@@ -50,7 +49,6 @@ use NAL\Session\Session;
 
 // Create new instance of Session class
 $session = new Session('test', (object)[
-    'name'     => 'test',
     'secure'   => true,
     'httpOnly' => true,
     'sameSite' => 'Strict',
@@ -64,7 +62,13 @@ $session->set('username', 'david');
 $session->get('username'); //david
 
 // Get all session data
-$session->all();
+$session->getAll();
+
+// Session set flash message
+$session->setFlashMessage('message', 'success');
+
+// Session get flash message
+$session->getFlashMessage('message');
 
 // Delete Session
 $session->destroy('key');

@@ -8,15 +8,28 @@
   "authors": [
     {
       "name": "naingaunglwin-dev",
-      "email": "example@gmail.com"
+      "email": "naingaunglwin.wd@gmail.com"
     }
   ],
   "require": {
-    "php": "^8.0"
+    "php": "^8.4"
   },
   "autoload": {
     "psr-4": {
-      "NAL\\Session\\": "src/"
+      "Naingaunglwin\\Session\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "pestphp/pest": "^4.3"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
     }
   }
 }
